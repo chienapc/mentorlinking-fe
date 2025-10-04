@@ -1,31 +1,36 @@
 import React from "react";
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function NotFoundPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-blue-200 via-white to-blue-100">
-      <div className="text-center">
-        <h1 className="text-6xl font-extrabold text-blue-600 mb-4 animate__animated animate__bounceIn animate__delay-1s">
-          404
-        </h1>
-        <p className="text-xl text-blue-500 mb-6 animate__animated animate__fadeIn animate__delay-2s">
-          Oops! The page you're looking for doesn't exist.
-        </p>
-        <a
-          href="/"
-          className="text-white text-lg font-semibold py-3 px-6 rounded-full bg-blue-500 hover:bg-blue-600 transition duration-300 ease-in-out"
-        >
-          Go Back to Home
-        </a>
-      </div>
-
-      {/* Optional: Sử dụng ảnh sáng và dễ chịu */}
-      <div className="mt-12 animate__animated animate__fadeIn animate__delay-3s">
-        <img
-          src="https://a0.muscache.com/airbnb/static/error_pages/404-Airbnb_final-d652ff855b1335dd3eedc3baa8dc8b69.gif"
-          alt="Not Found"
-          className="rounded-xl shadow-lg"
-        />
-      </div>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center"
+      style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={8} lg={6} className="text-center text-white">
+            <h1 className="display-1 fw-bold mb-4" style={{ fontSize: '6rem' }}>
+              404
+            </h1>
+            <p className="fs-4 mb-4">
+              Oops! Trang bạn tìm kiếm không tồn tại.
+            </p>
+            <Link to="/">
+              <Button
+                variant="light"
+                size="lg"
+                className="px-4 py-2"
+                style={{ borderRadius: '25px' }}
+              >
+                Về trang chủ
+              </Button>
+            </Link>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
