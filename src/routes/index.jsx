@@ -14,7 +14,9 @@ import {
 
 import {
   MentorDashboard,
-  RegisterMentorPage
+  RegisterMentorPage,
+  MentorListPage,
+  MentorDetailPage
 } from '../pages/mentor';
 
 // Common pages and components
@@ -56,6 +58,14 @@ const routes = createBrowserRouter([
   {
     path: "/mentor/dashboard",
     element: <Layout><MentorDashboard /></Layout>,
+  },
+  {
+    path: "/find-mentor",
+    element: <Layout><MentorListPage /></Layout>,
+  },
+  {
+    path: "/mentors/:id",
+    element: <Layout><MentorDetailPage /></Layout>,
   },
   {
     path: "*",
