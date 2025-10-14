@@ -2,7 +2,7 @@ import { Container, Row, Col, Form, Button, Card, InputGroup } from 'react-boots
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './MentorRegister.css';
+import '../../styles/components/MentorRegister.css';
 
 const RegisterMentorPage = () => {
     // State for form data
@@ -10,6 +10,8 @@ const RegisterMentorPage = () => {
         personalInfo: {
             name: '',
             email: '',
+            password: '',
+            confirmPassword: '',
             birthDate: '',
             location: '',
             phone: '',
@@ -125,6 +127,18 @@ const RegisterMentorPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Validate passwords match
+        if (formData.personalInfo.password !== formData.personalInfo.confirmPassword) {
+            alert('Mật khẩu không khớp. Vui lòng kiểm tra lại!');
+            return;
+        }
+
+        // Validate password strength
+        if (formData.personalInfo.password.length < 6) {
+            alert('Mật khẩu phải có ít nhất 6 ký tự!');
+            return;
+        }
+
         // Here you would typically send the data to your API
         const mentorData = {
             personalInfo: formData.personalInfo,
@@ -154,7 +168,7 @@ const RegisterMentorPage = () => {
                             </div>
                             <Card.Body className="p-4 p-md-5">
 
-                                <Form>
+                                <Form onSubmit={handleSubmit}>
                                     <Row className="mb-3">
                                         <Col md={6}>
                                             <Form.Group className="mb-3">
@@ -165,8 +179,12 @@ const RegisterMentorPage = () => {
                                                     </InputGroup.Text>
                                                     <Form.Control
                                                         type="text"
+                                                        name="name"
+                                                        value={formData.personalInfo.name}
+                                                        onChange={handlePersonalInfoChange}
                                                         placeholder="Họ và tên đầy đủ của bạn"
                                                         className="bg-light py-2 enhanced-input"
+                                                        required
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -180,8 +198,58 @@ const RegisterMentorPage = () => {
                                                     </InputGroup.Text>
                                                     <Form.Control
                                                         type="email"
+                                                        name="email"
+                                                        value={formData.personalInfo.email}
+                                                        onChange={handlePersonalInfoChange}
                                                         placeholder="you@yourdomain.com"
                                                         className="bg-light border-0 py-2"
+                                                        required
+                                                    />
+                                                </InputGroup>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="mb-3">
+                                        <Col md={6}>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label>Mật khẩu <span className="text-danger">*</span></Form.Label>
+                                                <InputGroup>
+                                                    <InputGroup.Text className="bg-light border-0">
+                                                        <i className="bi bi-lock text-secondary"></i>
+                                                    </InputGroup.Text>
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="password"
+                                                        value={formData.personalInfo.password}
+                                                        onChange={handlePersonalInfoChange}
+                                                        placeholder="Nhập mật khẩu của bạn"
+                                                        className="bg-light border-0 py-2"
+                                                        minLength="6"
+                                                        required
+                                                    />
+                                                </InputGroup>
+                                                <Form.Text className="text-muted">
+                                                    Mật khẩu phải có ít nhất 6 ký tự
+                                                </Form.Text>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label>Xác nhận mật khẩu <span className="text-danger">*</span></Form.Label>
+                                                <InputGroup>
+                                                    <InputGroup.Text className="bg-light border-0">
+                                                        <i className="bi bi-lock-fill text-secondary"></i>
+                                                    </InputGroup.Text>
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="confirmPassword"
+                                                        value={formData.personalInfo.confirmPassword}
+                                                        onChange={handlePersonalInfoChange}
+                                                        placeholder="Nhập lại mật khẩu"
+                                                        className="bg-light border-0 py-2"
+                                                        minLength="6"
+                                                        required
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -569,8 +637,10 @@ const RegisterMentorPage = () => {
                                         <i className="bi bi-eye me-2"></i> Xem thử
                                     </Button>
                                     <Button
+                                        type="submit"
                                         variant="primary"
                                         className="mentor-submit-btn"
+                                        onClick={handleSubmit}
                                     >
                                         Đăng ký <i className="bi bi-arrow-right ms-2"></i>
                                     </Button>

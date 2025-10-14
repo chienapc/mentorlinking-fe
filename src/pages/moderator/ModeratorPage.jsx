@@ -5,8 +5,8 @@ import {
     ContentReview,
     CustomerSupport,
     ServiceQuality
-} from '../components';
-import './ModeratorPage.css';
+} from '../../components/moderator';
+import '../../styles/components/ModeratorPage.css';
 // Component imports are now at the top of the file
 
 const ModeratorPage = () => {

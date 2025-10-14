@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Nav, Button, Badge, Alert } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './MentorDashboard.css';
+import '../../../styles/components/MentorDashboard.css';
 
 // Import components
 import {
@@ -11,7 +11,7 @@ import {
     ReviewManagement,
     ServiceManagement,
     ContentManagement
-} from '../../components/dashboard';
+} from '../../../components/mentor/dashboard';
 
 const MentorDashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');

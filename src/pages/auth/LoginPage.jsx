@@ -1,9 +1,9 @@
 import { Container, Form, Button, Card, InputGroup, Row, Col, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../../../shared/contexts';
+import { useAuth } from '../../contexts';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './Auth.css';
+import '../../styles/components/Auth.css';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');

@@ -1,7 +1,7 @@
 import { Container, Form, Button, Card, InputGroup, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './Auth.css';
+import '../../styles/components/Auth.css';
 
 const RegisterPage = () => {
     return (

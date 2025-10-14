@@ -1,7 +1,7 @@
 import React from 'react';
-import { useTheme } from '../../../shared/contexts';
+import { useTheme } from '../../../contexts';
 import { Button } from 'react-bootstrap';
-import './ThemeToggle.css';
+import '../../../styles/components/ThemeToggle.css';
 
 const ThemeToggle = () => {
     const { isDarkMode, toggleTheme } = useTheme();

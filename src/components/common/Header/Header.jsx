@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Nav, Navbar, NavDropdown, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth, isModerator, useTheme } from '../../../shared/contexts';
+import { useAuth, isModerator, useTheme } from '../../../contexts';
 import { ThemeToggle } from '../';
-import './Header.css';
+import '../../../styles/components/Header.css';
 
 const Header = () => {
     const [showDropdown, setShowDropdown] = useState(false);

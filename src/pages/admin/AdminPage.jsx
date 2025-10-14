@@ -19,9 +19,9 @@ import {
     SystemSettings,
     RolePermissions,
     Analytics
-} from '../components';
+} from '../../components/admin';
 
-import './AdminPage.css';
+import '../../styles/components/AdminPage.css';
 
 const AdminPage = () => {
     const [activeTab, setActiveTab] = useState('users');

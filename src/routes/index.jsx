@@ -2,20 +2,20 @@
 import {
   LoginPage,
   RegisterPage
-} from '../features/auth';
+} from '../pages/auth';
 
 import {
   AdminPage
-} from '../features/admin';
+} from '../pages/admin';
 
 import {
   ModeratorPage
-} from '../features/moderator';
+} from '../pages/moderator';
 
 import {
   MentorDashboard,
   RegisterMentorPage
-} from '../features/mentor';
+} from '../pages/mentor';
 
 // Common pages and components
 import {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import './Layout.css';
+import '../../styles/components/Layout.css';
 
 const AuthLayout = ({ children }) => {
     return (

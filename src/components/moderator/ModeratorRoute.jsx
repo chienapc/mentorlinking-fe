@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth, isModerator } from '../../../shared/contexts';
+import { useAuth, isModerator } from '../../contexts';
 
 // Protected route component that checks for moderator role
 const ModeratorRoute = ({ children }) => {
