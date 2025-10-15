@@ -28,10 +28,12 @@ import {
     FaPhone,
     FaEnvelope,
     FaCheckCircle,
-    FaExternalLinkAlt
+    FaExternalLinkAlt,
+    FaGlobe
 } from 'react-icons/fa';
 import MentorService from '../../services/mentor/MentorService';
 import ImageModal from '../../components/common/ImageModal';
+import { getCountryName, getCountryFlagUrl } from '../../utils/mentorUtils';
 import '../../styles/components/MentorDetail.css'; const MentorDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -227,6 +229,46 @@ import '../../styles/components/MentorDetail.css'; const MentorDetailPage = () =
                                             </div>
                                         )}
                                     </div>
+
+                                    {/* Approved Countries Section */}
+                                    {mentor.approvedCountries && mentor.approvedCountries.length > 0 && (
+                                        <div className="mt-3">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <FaGlobe className="text-primary me-2" />
+                                                <span className="fw-semibold text-primary">Hỗ trợ du học:</span>
+                                            </div>
+                                            <div className="d-flex flex-wrap gap-2">
+                                                {mentor.approvedCountries.map((country, index) => (
+                                                    <Badge
+                                                        key={index}
+                                                        bg="primary"
+                                                        className="px-3 py-2 d-flex align-items-center"
+                                                        style={{
+                                                            fontSize: '0.8rem',
+                                                            fontWeight: '500'
+                                                        }}
+                                                    >
+                                                        {getCountryFlagUrl(country) ? (
+                                                            <img
+                                                                src={getCountryFlagUrl(country)}
+                                                                alt={`${getCountryName(country)} flag`}
+                                                                style={{
+                                                                    width: '20px',
+                                                                    height: '15px',
+                                                                    marginRight: '8px',
+                                                                    objectFit: 'cover',
+                                                                    borderRadius: '2px'
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <span className="me-2">🌍</span>
+                                                        )}
+                                                        {getCountryName(country)}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="mentor-actions d-flex gap-2 flex-wrap">

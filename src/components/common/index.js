@@ -4,3 +4,4 @@ export { default as Footer } from './Footer/Footer';
 export { default as ThemeToggle } from './ThemeToggle/ThemeToggle';
 export { Loading, ErrorAlert, NoData } from './FeedbackComponents';
 export { default as ImageModal } from './ImageModal';
+export { default as MentorPolicyModal } from './MentorPolicyModal';

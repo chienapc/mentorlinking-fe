@@ -13,6 +13,7 @@ class MentorService {
             if (params.gender) queryParams.append('gender', params.gender);
             if (params.location) queryParams.append('location', params.location);
             if (params.minRating) queryParams.append('minRating', params.minRating);
+            if (params.approvedCountry) queryParams.append('approvedCountry', params.approvedCountry);
 
             const url = `/api/mentors${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
             const response = await instance.get(url);

@@ -1,7 +1,9 @@
-import { Container, Row, Col, Form, Button, Card, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, InputGroup, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import CountrySelector from '../../components/mentor/CountrySelector';
+import { MentorPolicyModal } from '../../components/common';
 import '../../styles/components/MentorRegister.css';
 
 const RegisterMentorPage = () => {
@@ -17,10 +19,16 @@ const RegisterMentorPage = () => {
             phone: '',
             title: '',
             education: '',
-            service: '',
             bio: ''
         }
     });
+
+    // State for approved countries
+    const [selectedCountries, setSelectedCountries] = useState([]);
+
+    // State for policy modal
+    const [showPolicyModal, setShowPolicyModal] = useState(false);
+    const [hasPolicyAccepted, setHasPolicyAccepted] = useState(false);
 
     // State for form sections
     const [educations, setEducations] = useState([{
@@ -139,17 +147,41 @@ const RegisterMentorPage = () => {
             return;
         }
 
+        // Validate selected countries
+        if (selectedCountries.length === 0) {
+            alert('Vui lòng chọn ít nhất một nước bạn có thể hỗ trợ du học!');
+            return;
+        }
+
+        // Check if policy has been accepted
+        if (!hasPolicyAccepted) {
+            alert('Vui lòng đọc và chấp nhận chính sách mentor trước khi đăng ký!');
+            setShowPolicyModal(true);
+            return;
+        }
+
         // Here you would typically send the data to your API
         const mentorData = {
             personalInfo: formData.personalInfo,
             educations,
             experiences,
-            testScores
+            testScores,
+            approvedCountries: selectedCountries
         };
 
         console.log('Form submitted:', mentorData);
         // You would call your API here
         // authService.registerMentor(mentorData)...
+    };
+
+    // Policy modal handlers
+    const handlePolicyAccept = () => {
+        setHasPolicyAccepted(true);
+        setShowPolicyModal(false);
+    };
+
+    const handleShowPolicy = () => {
+        setShowPolicyModal(true);
     };
 
     return (
@@ -351,17 +383,11 @@ const RegisterMentorPage = () => {
                                         </Col>
                                     </Row>
 
-                                    <Form.Group className="mb-4">
-                                        <Form.Label>Dịch vụ bạn muốn cung cấp <span className="text-danger">*</span></Form.Label>
-                                        <Form.Select className="bg-light border-0 py-2">
-                                            <option>Chọn dịch vụ</option>
-                                            <option value="1">Tư vấn du học</option>
-                                            <option value="2">Hướng nghiệp</option>
-                                            <option value="3">Luyện thi chứng chỉ</option>
-                                            <option value="4">Tư vấn học thuật</option>
-                                            <option value="5">Phát triển kỹ năng mềm</option>
-                                        </Form.Select>
-                                    </Form.Group>
+                                    {/* Country Selection Component */}
+                                    <CountrySelector
+                                        selectedCountries={selectedCountries}
+                                        onCountriesChange={setSelectedCountries}
+                                    />
 
                                     <Form.Group className="mb-4">
                                         <Form.Label>Ảnh đại diện <span className="text-danger">*</span></Form.Label>
@@ -382,6 +408,36 @@ const RegisterMentorPage = () => {
                                             className="bg-light border-0"
                                         />
                                     </Form.Group>
+
+                                    {/* Policy Agreement Section */}
+                                    <div className="mb-4">
+                                        <Alert variant={hasPolicyAccepted ? "success" : "warning"} className="p-3">
+                                            <div className="d-flex align-items-start">
+                                                <i className={`bi ${hasPolicyAccepted ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-warning'} me-2 mt-1`}></i>
+                                                <div className="flex-grow-1">
+                                                    <h6 className="mb-2">
+                                                        {hasPolicyAccepted ? 'Đã chấp nhận chính sách' : 'Chính sách và Điều khoản'}
+                                                        <span className="text-danger"> *</span>
+                                                    </h6>
+                                                    <p className="mb-2 small">
+                                                        {hasPolicyAccepted
+                                                            ? 'Bạn đã đọc và đồng ý với các chính sách mentor. Cảm ơn bạn!'
+                                                            : 'Trước khi đăng ký, vui lòng đọc và đồng ý với các chính sách dành cho mentor.'
+                                                        }
+                                                    </p>
+                                                    <Button
+                                                        variant={hasPolicyAccepted ? "outline-success" : "primary"}
+                                                        size="sm"
+                                                        onClick={handleShowPolicy}
+                                                        className="d-flex align-items-center"
+                                                    >
+                                                        <i className="bi bi-file-text me-2"></i>
+                                                        {hasPolicyAccepted ? 'Xem lại chính sách' : 'Đọc chính sách mentor'}
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </Alert>
+                                    </div>
                                 </Form>
                             </Card.Body>
                         </Card>
@@ -638,11 +694,20 @@ const RegisterMentorPage = () => {
                                     </Button>
                                     <Button
                                         type="submit"
-                                        variant="primary"
+                                        variant={hasPolicyAccepted ? "success" : "primary"}
                                         className="mentor-submit-btn"
                                         onClick={handleSubmit}
                                     >
-                                        Đăng ký <i className="bi bi-arrow-right ms-2"></i>
+                                        {hasPolicyAccepted ? (
+                                            <>
+                                                <i className="bi bi-check-circle me-2"></i>
+                                                Đăng ký <i className="bi bi-arrow-right ms-2"></i>
+                                            </>
+                                        ) : (
+                                            <>
+                                                Đọc chính sách và đăng ký <i className="bi bi-arrow-right ms-2"></i>
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
                             </div>
@@ -650,6 +715,13 @@ const RegisterMentorPage = () => {
                     </Col>
                 </Row>
             </Container>
+
+            {/* Mentor Policy Modal */}
+            <MentorPolicyModal
+                show={showPolicyModal}
+                onHide={() => setShowPolicyModal(false)}
+                onAccept={handlePolicyAccept}
+            />
         </div>
     );
 };

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, Badge, Button } from 'react-bootstrap';
-import { FaStar, FaMapMarkerAlt, FaLinkedin, FaBookmark } from 'react-icons/fa';
+import { FaStar, FaMapMarkerAlt, FaLinkedin, FaBookmark, FaGlobe } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { getCountryName, getCountryFlagUrl } from '../../utils/mentorUtils';
 
 const MentorCard = ({ mentor }) => {
     const navigate = useNavigate();
@@ -83,6 +84,58 @@ const MentorCard = ({ mentor }) => {
                         {mentor.currentLocation}
                     </small>
                 </div>
+
+                {/* Approved Countries Section */}
+                {mentor.approvedCountries && mentor.approvedCountries.length > 0 && (
+                    <div className="mb-3">
+                        <div className="d-flex align-items-center justify-content-center mb-2">
+                            <FaGlobe className="text-primary me-1" style={{ fontSize: '0.9rem' }} />
+                            <small className="text-muted fw-semibold">Hỗ trợ du học:</small>
+                        </div>
+                        <div className="d-flex flex-wrap justify-content-center gap-1">
+                            {mentor.approvedCountries.slice(0, 3).map((country, index) => (
+                                <Badge
+                                    key={index}
+                                    bg="outline-primary"
+                                    className="country-badge d-flex align-items-center"
+                                    style={{
+                                        fontSize: '0.7rem',
+                                        padding: '0.25rem 0.5rem',
+                                        border: '1px solid #0d6efd',
+                                        color: '#0d6efd',
+                                        backgroundColor: 'transparent'
+                                    }}
+                                >
+                                    {getCountryFlagUrl(country) ? (
+                                        <img
+                                            src={getCountryFlagUrl(country)}
+                                            alt={`${getCountryName(country)} flag`}
+                                            style={{
+                                                width: '16px',
+                                                height: '12px',
+                                                marginRight: '4px',
+                                                objectFit: 'cover',
+                                                borderRadius: '1px'
+                                            }}
+                                        />
+                                    ) : null}
+                                    {getCountryName(country)}
+                                </Badge>
+                            ))}
+                            {mentor.approvedCountries.length > 3 && (
+                                <Badge
+                                    bg="secondary"
+                                    style={{
+                                        fontSize: '0.7rem',
+                                        padding: '0.25rem 0.5rem'
+                                    }}
+                                >
+                                    +{mentor.approvedCountries.length - 3}
+                                </Badge>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 <Card.Text className="mentor-intro flex-grow-1">
                     {mentor.intro && mentor.intro.length > 80
