@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Nav, Navbar, NavDropdown, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth, isModerator, useTheme } from '../../../contexts';
+import { useAuth, useTheme } from '../../../contexts';
 import { ThemeToggle } from '../';
 import '../../../styles/components/Header.css';
 
@@ -10,9 +10,11 @@ const Header = () => {
     const navigate = useNavigate();
 
     // Get authentication state from context
-    const { isLoggedIn, roles, user } = useAuth();
+    const { isLoggedIn, user } = useAuth();
     const { isDarkMode } = useTheme();
-    const userIsModerator = isModerator(roles);
+
+    // Check if user is moderator or admin
+    const userIsModerator = user?.role === 'MODERATOR' || user?.role === 'ADMIN';
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -44,17 +46,46 @@ const Header = () => {
 
                             {isLoggedIn ? (
                                 <NavDropdown
-                                    title={user?.name || "Tài khoản"}
+                                    title={
+                                        <span>
+                                            <i className="bi bi-person-circle me-2"></i>
+                                            {user?.email || "Tài khoản"}
+                                        </span>
+                                    }
                                     id="account-dropdown"
                                     className="account-dropdown"
                                     show={showDropdown}
                                     onMouseEnter={() => setShowDropdown(true)}
                                     onMouseLeave={() => setShowDropdown(false)}
                                 >
-                                    <NavDropdown.Item as={Link} to="/profile">Hồ sơ</NavDropdown.Item>
-                                    <NavDropdown.Item as={Link} to="/settings">Cài đặt</NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/profile">
+                                        <i className="bi bi-person me-2"></i>Hồ sơ
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/settings">
+                                        <i className="bi bi-gear me-2"></i>Cài đặt
+                                    </NavDropdown.Item>
+
+                                    {/* Role-based navigation */}
+                                    {user?.role === 'ADMIN' && (
+                                        <NavDropdown.Item as={Link} to="/admin">
+                                            <i className="bi bi-shield-lock me-2"></i>Admin Panel
+                                        </NavDropdown.Item>
+                                    )}
+                                    {user?.role === 'MENTOR' && (
+                                        <NavDropdown.Item as={Link} to="/mentor/dashboard">
+                                            <i className="bi bi-speedometer2 me-2"></i>Dashboard
+                                        </NavDropdown.Item>
+                                    )}
+                                    {user?.role === 'MODERATOR' && (
+                                        <NavDropdown.Item as={Link} to="/moderator">
+                                            <i className="bi bi-shield-check me-2"></i>Moderator Panel
+                                        </NavDropdown.Item>
+                                    )}
+
                                     <NavDropdown.Divider />
-                                    <NavDropdown.Item onClick={handleLogout}>Đăng xuất</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={handleLogout}>
+                                        <i className="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                    </NavDropdown.Item>
                                 </NavDropdown>
                             ) : (
                                 <NavDropdown

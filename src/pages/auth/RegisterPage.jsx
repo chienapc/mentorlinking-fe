@@ -1,9 +1,93 @@
-import { Container, Form, Button, Card, InputGroup, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Form, Button, Card, InputGroup, Row, Col, Alert } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts';
+import { clearAllStorage } from '../../utils/storageUtils';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../styles/components/Auth.css';
 
 const RegisterPage = () => {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        phone: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+
+    // Clear localStorage khi component mount
+    useEffect(() => {
+        // Clear tất cả localStorage data
+        clearAllStorage();
+
+        // Logout để clear context state
+        logout();
+    }, [logout]); const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        // Validation
+        if (!formData.fullName || !formData.phone || !formData.email || !formData.password || !formData.confirmPassword) {
+            setError('Vui lòng điền đầy đủ thông tin');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Mật khẩu xác nhận không khớp');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.password.length < 8) {
+            setError('Mật khẩu phải có ít nhất 8 ký tự');
+            setLoading(false);
+            return;
+        }
+
+        if (!agreedToTerms) {
+            setError('Vui lòng đồng ý với điều khoản sử dụng');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            // TODO: Implement actual register API call
+            console.log('Register data:', formData);
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Clear localStorage sau khi đăng ký thành công
+            clearAllStorage();
+
+            // Redirect to login page
+            navigate('/login', {
+                state: {
+                    message: 'Đăng ký thành công! Vui lòng đăng nhập.'
+                }
+            });
+        } catch (error) {
+            console.error('Register error:', error);
+            setError('Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.');
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <div
             style={{
@@ -22,7 +106,13 @@ const RegisterPage = () => {
                             <Card.Body className="p-4 p-md-5">
                                 <h3 className="text-center text-secondary fw-normal mb-4">Đăng ký tài khoản</h3>
 
-                                <Form>
+                                {error && (
+                                    <Alert variant="danger" className="mb-3">
+                                        {error}
+                                    </Alert>
+                                )}
+
+                                <Form onSubmit={handleSubmit}>
                                     <Row>
                                         <Col md={6}>
                                             <Form.Group className="mb-3">
@@ -33,8 +123,11 @@ const RegisterPage = () => {
                                                     </InputGroup.Text>
                                                     <Form.Control
                                                         type="text"
+                                                        name="fullName"
                                                         placeholder="Nguyễn Văn A"
                                                         className="auth-input"
+                                                        value={formData.fullName}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -48,8 +141,11 @@ const RegisterPage = () => {
                                                     </InputGroup.Text>
                                                     <Form.Control
                                                         type="tel"
+                                                        name="phone"
                                                         placeholder="0912345678"
                                                         className="auth-input"
+                                                        value={formData.phone}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -64,8 +160,11 @@ const RegisterPage = () => {
                                             </InputGroup.Text>
                                             <Form.Control
                                                 type="email"
+                                                name="email"
                                                 placeholder="example@email.com"
                                                 className="auth-input"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
                                             />
                                         </InputGroup>
                                     </Form.Group>
@@ -78,8 +177,11 @@ const RegisterPage = () => {
                                             </InputGroup.Text>
                                             <Form.Control
                                                 type="password"
+                                                name="password"
                                                 placeholder="Tối thiểu 8 ký tự"
                                                 className="auth-input"
+                                                value={formData.password}
+                                                onChange={handleInputChange}
                                             />
                                         </InputGroup>
                                     </Form.Group>
@@ -92,8 +194,11 @@ const RegisterPage = () => {
                                             </InputGroup.Text>
                                             <Form.Control
                                                 type="password"
+                                                name="confirmPassword"
                                                 placeholder="Nhập lại mật khẩu"
                                                 className="auth-input"
+                                                value={formData.confirmPassword}
+                                                onChange={handleInputChange}
                                             />
                                         </InputGroup>
                                     </Form.Group>
@@ -104,6 +209,8 @@ const RegisterPage = () => {
                                             id="terms"
                                             label="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
                                             className="text-secondary small"
+                                            checked={agreedToTerms}
+                                            onChange={(e) => setAgreedToTerms(e.target.checked)}
                                         />
                                     </Form.Group>
 
@@ -111,8 +218,16 @@ const RegisterPage = () => {
                                         variant="primary"
                                         type="submit"
                                         className="w-100 py-2 mb-3 fw-medium login-btn"
+                                        disabled={loading}
                                     >
-                                        ĐĂNG KÝ
+                                        {loading ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                Đang đăng ký...
+                                            </>
+                                        ) : (
+                                            'ĐĂNG KÝ'
+                                        )}
                                     </Button>
 
                                     <div className="text-center text-secondary small mt-3">

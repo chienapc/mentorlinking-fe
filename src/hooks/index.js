@@ -1,2 +1,2 @@
 // Hooks exports
-// TODO: Add custom hooks
+export { default as useLoginRedirect } from './useLoginRedirect';

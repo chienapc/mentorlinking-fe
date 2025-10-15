@@ -1,7 +1,8 @@
 // Application constants
 export const API_ENDPOINTS = {
     AUTH: {
-        LOGIN: '/auth/login',
+        LOGIN: '/api/auth/access-token',
+        REFRESH: '/api/auth/refresh-token',
         REGISTER: '/auth/register',
         LOGOUT: '/auth/logout',
     },
@@ -10,7 +11,7 @@ export const API_ENDPOINTS = {
         UPDATE: '/users/update',
     },
     MENTORS: {
-        LIST: '/mentors',
+        LIST: '/api/mentors',
         REGISTER: '/mentors/register',
         DASHBOARD: '/mentors/dashboard',
     },
@@ -22,14 +23,18 @@ export const API_ENDPOINTS = {
 };
 
 export const USER_ROLES = {
-    ADMIN: 'admin',
-    MODERATOR: 'moderator',
-    MENTOR: 'mentor',
-    USER: 'user',
+    ADMIN: 'ADMIN',
+    MODERATOR: 'MODERATOR',
+    MENTOR: 'MENTOR',
+    CUSTOMER: 'CUSTOMER',
 };
 
 export const STORAGE_KEYS = {
     AUTH_STATE: 'authState',
+    ACCESS_TOKEN: 'accessToken',
+    REFRESH_TOKEN: 'refreshToken',
     THEME: 'theme',
-    TOKEN: 'token',
 };
+
+// Utilities
+export * from './storageUtils';

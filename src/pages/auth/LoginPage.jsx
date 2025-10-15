@@ -1,7 +1,9 @@
 import { Container, Form, Button, Card, InputGroup, Row, Col, Alert } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts';
+import { useLoginRedirect } from '../../hooks';
+import AuthService from '../../services/auth/AuthService';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../styles/components/Auth.css';
 
@@ -9,33 +11,50 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { login, isLoggedIn } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const handleLogin = (e) => {
+    // Hiển thị success message từ register page
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+            // Clear the message from location state
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location, navigate]);
+
+    // Use redirect hook
+    useLoginRedirect();
+
+    const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
         // Simple validation
         if (!email || !password) {
             setError('Vui lòng nhập email và mật khẩu');
+            setLoading(false);
             return;
         }
 
-        // In a real app, you'd call an API here
-        // For demo purposes, we'll simulate successful login
-        if (email === 'moderator@mentorlink.com' && password === 'password') {
-            login(
-                { id: 1, email, name: 'Quản trị viên' },
-                ['moderator']
-            );
-            navigate('/moderator');
-        } else {
-            login(
-                { id: 2, email, name: 'Người dùng' },
-                ['user']
-            );
-            navigate('/');
+        try {
+            const result = await login(email, password);
+
+            if (result.success) {
+                // Redirect sẽ được handle bởi useLoginRedirect hook
+                console.log('Login successful, redirecting...');
+            } else {
+                setError(result.error || 'Đăng nhập thất bại');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            setError('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.');
+        } finally {
+            setLoading(false);
         }
     };
     return (
@@ -54,6 +73,12 @@ const LoginPage = () => {
                         <Card className="border-0 shadow-lg rounded-4 w-100 login-card" style={{ maxWidth: '500px' }}>
                             <Card.Body className="p-4 p-md-5">
                                 <h3 className="text-center text-secondary fw-normal mb-4">Đăng nhập bằng tài khoản</h3>
+
+                                {successMessage && (
+                                    <Alert variant="success" className="mb-3">
+                                        {successMessage}
+                                    </Alert>
+                                )}
 
                                 {error && (
                                     <Alert variant="danger" className="mb-3">
@@ -100,8 +125,16 @@ const LoginPage = () => {
                                         variant="primary"
                                         type="submit"
                                         className="w-100 py-2 mb-3 fw-medium login-btn"
+                                        disabled={loading}
                                     >
-                                        ĐĂNG NHẬP
+                                        {loading ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                Đang đăng nhập...
+                                            </>
+                                        ) : (
+                                            'ĐĂNG NHẬP'
+                                        )}
                                     </Button>
 
                                     <div className="alert alert-info text-center small mb-3">
