@@ -1,2 +1,2 @@
 // Auth service exports
-// TODO: Implement AuthService functions
+export { default as AuthService } from './AuthService';

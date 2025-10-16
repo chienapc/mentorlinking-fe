@@ -1,2 +1,3 @@
 // Auth components exports
-// TODO: Add auth-specific components like LoginForm, RegisterForm, etc.
+export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as AuthLoader } from './AuthLoader';

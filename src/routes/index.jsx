@@ -8,6 +8,8 @@ import {
   AdminPage
 } from '../pages/admin';
 
+
+
 import {
   ModeratorPage
 } from '../pages/moderator';
@@ -26,6 +28,7 @@ import {
 } from '../pages/common';
 
 import { Layout } from '../components/layout';
+import { ProtectedRoute } from '../components/auth';
 
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
@@ -38,7 +41,6 @@ const routes = createBrowserRouter([
     path: "/login",
     element: <Layout><LoginPage /></Layout>,
   },
-
   {
     path: "/register",
     element: <Layout><RegisterPage /></Layout>,
@@ -49,15 +51,27 @@ const routes = createBrowserRouter([
   },
   {
     path: "/moderator",
-    element: <Layout><ModeratorPage /></Layout>,
+    element: <Layout>
+      <ProtectedRoute requiredRole="MODERATOR">
+        <ModeratorPage />
+      </ProtectedRoute>
+    </Layout>,
   },
   {
     path: "/admin",
-    element: <Layout><AdminPage /></Layout>,
+    element: <Layout>
+      <ProtectedRoute requiredRole="ADMIN">
+        <AdminPage />
+      </ProtectedRoute>
+    </Layout>,
   },
   {
     path: "/mentor/dashboard",
-    element: <Layout><MentorDashboard /></Layout>,
+    element: <Layout>
+      <ProtectedRoute requiredRole="MENTOR">
+        <MentorDashboard />
+      </ProtectedRoute>
+    </Layout>,
   },
   {
     path: "/find-mentor",
@@ -67,13 +81,11 @@ const routes = createBrowserRouter([
     path: "/mentors/:id",
     element: <Layout><MentorDetailPage /></Layout>,
   },
+
   {
     path: "*",
     element: <Layout><NotFoundPage /></Layout>,
   },
-
-],
-
-);
+]);
 
 export default routes;
