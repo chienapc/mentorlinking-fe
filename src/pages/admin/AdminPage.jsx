@@ -3,8 +3,9 @@ import { Container, Row, Col, Card, Nav, Tab, Badge, Alert, Button } from 'react
 import {
     FaUsers, FaBlog, FaUserCog, FaChartBar,
     FaCalendarAlt, FaHistory, FaCommentDots,
-    FaBullhorn, FaCog, FaKey, FaShieldAlt
+    FaBullhorn, FaCog, FaKey, FaShieldAlt, FaGlobeAmericas
 } from 'react-icons/fa';
+import { CountryManagement } from '../../components/admin';
 
 import '../../styles/components/AdminPage.css';
 
@@ -564,6 +565,13 @@ const AdminPage = () => {
             title: 'Duyệt/xác thực mentor',
             badge: '8',
             component: <MentorApproval />
+        },
+        {
+            key: 'countries',
+            icon: <FaGlobeAmericas />,
+            title: 'Quản lý các nước du học',
+            badge: '3',
+            component: <CountryManagement />
         },
         {
             key: 'feedback',

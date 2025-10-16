@@ -365,6 +365,57 @@
     background-color: #e91e63 !important;
 }
 
+/* Country Badge Styles */
+.country-badge {
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.country-badge:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+}
+
+.mentor-card .fa-globe {
+    color: #17a2b8 !important;
+}
+
+/* Approved Countries Section */
+.mentor-card .approved-countries {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.mentor-card .approved-countries .badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Country badges responsive */
+@media (max-width: 768px) {
+    .country-badge {
+        font-size: 0.6rem !important;
+        padding: 0.2rem 0.4rem !important;
+        margin: 0.1rem;
+    }
+
+    .mentor-card .fa-globe {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .country-badge {
+        font-size: 0.55rem !important;
+        padding: 0.15rem 0.3rem !important;
+    }
+}
+
 /* Card hover effect improvements */
 .mentor-card {
     position: relative;
