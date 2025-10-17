@@ -5,3 +5,4 @@ export { default as ThemeToggle } from './ThemeToggle/ThemeToggle';
 export { Loading, ErrorAlert, NoData } from './FeedbackComponents';
 export { default as ImageModal } from './ImageModal';
 export { default as MentorPolicyModal } from './MentorPolicyModal';
+export { default as CustomerPolicyModal } from './CustomerPolicyModal';

@@ -2,13 +2,13 @@ import axios from "axios";
 
 const URL = "http://localhost:8080"; // BE url
 
-// Danh sách các API không cần token (permit all)
+// Danh sách các endpoint public không cần token
 const PUBLIC_ENDPOINTS = [
-  '/api/auth/access-token',
-  '/api/auth/refresh-token',
+  '/api/auth/login',
   '/api/auth/register',
-  '/api/mentors',
-  '/api/blogs'
+  '/api/auth/refresh-token',
+  '/api/customer-policies/active',
+  '/api/mentor-policies/active'
 ];
 
 // Hàm kiểm tra endpoint có phải public không
@@ -42,12 +42,9 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const url = config.url || '';
 
-  // Nếu không phải public endpoint thì gắn token
-  if (!isPublicEndpoint(url)) {
-    const token = getAccessToken();
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+  const token = getAccessToken();
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
 
   return config;

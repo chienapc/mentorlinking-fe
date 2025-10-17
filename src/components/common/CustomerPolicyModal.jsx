@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Card, Spinner, Alert, Badge } from 'react-bootstrap';
 import PolicyService from '../../services/policy/PolicyService';
 
-const MentorPolicyModal = ({ show, onHide, onAccept }) => {
+const CustomerPolicyModal = ({ show, onHide, onAgree }) => {
     const [policies, setPolicies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -17,23 +17,23 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
         setLoading(true);
         setError('');
         try {
-            const response = await PolicyService.getActiveMentorPolicies();
+            const response = await PolicyService.getActiveCustomerPolicies();
             if (response.respCode === "0") {
                 setPolicies(response.data || []);
             } else {
-                setError(response.description || 'Có lỗi xảy ra khi tải chính sách mentor');
+                setError(response.description || 'Có lỗi xảy ra khi tải chính sách');
             }
         } catch (error) {
-            console.error('Error fetching mentor policies:', error);
-            setError('Không thể tải thông tin chính sách mentor. Vui lòng thử lại.');
+            console.error('Error fetching policies:', error);
+            setError('Không thể tải thông tin chính sách. Vui lòng thử lại.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleAccept = () => {
-        if (onAccept) {
-            onAccept();
+    const handleAgree = () => {
+        if (onAgree) {
+            onAgree();
         }
         onHide();
     };
@@ -50,7 +50,7 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
             <Modal.Header closeButton className="border-0 pb-0">
                 <Modal.Title className="text-primary fw-bold">
                     <i className="bi bi-shield-check me-2"></i>
-                    Chính sách và Điều khoản dành cho Mentor
+                    Điều khoản sử dụng và chính sách bảo mật
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ maxHeight: '60vh', overflowY: 'auto' }} className="pt-2">
@@ -59,7 +59,7 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
                         <Spinner animation="border" variant="primary" role="status">
                             <span className="visually-hidden">Đang tải...</span>
                         </Spinner>
-                        <p className="mt-3 text-muted">Đang tải chính sách mentor...</p>
+                        <p className="mt-3 text-muted">Đang tải chính sách...</p>
                     </div>
                 ) : error ? (
                     <Alert variant="danger" className="border-0 shadow-sm">
@@ -75,9 +75,9 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
                     </Alert>
                 ) : policies.length > 0 ? (
                     <div>
-                        <Alert variant="warning" className="border-0 shadow-sm mb-4">
-                            <i className="bi bi-exclamation-triangle me-2"></i>
-                            <strong>Quan trọng:</strong> Vui lòng đọc kỹ các chính sách dành cho mentor trước khi đăng ký:
+                        <Alert variant="info" className="border-0 shadow-sm mb-4">
+                            <i className="bi bi-info-circle me-2"></i>
+                            Vui lòng đọc kỹ các điều khoản và chính sách dưới đây trước khi đồng ý:
                         </Alert>
 
                         {policies.map((policy, index) => (
@@ -85,12 +85,12 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
                                 <Card.Body className="p-4">
                                     <div className="d-flex align-items-start mb-3">
                                         <Badge
-                                            bg="success"
+                                            bg="primary"
                                             className="me-3 mt-1 px-2 py-1 rounded-pill"
                                         >
                                             {index + 1}
                                         </Badge>
-                                        <Card.Title className="h5 text-success mb-0 flex-grow-1">
+                                        <Card.Title className="h5 text-primary mb-0 flex-grow-1">
                                             {policy.title}
                                         </Card.Title>
                                     </div>
@@ -111,15 +111,15 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
                             </Card>
                         ))}
 
-                        <Alert variant="info" className="border-0 shadow-sm mt-4">
-                            <i className="bi bi-info-circle me-2"></i>
-                            <strong>Xác nhận:</strong> Bằng cách nhấn "Tôi đồng ý", bạn cam kết tuân thủ các chính sách trên.
+                        <Alert variant="warning" className="border-0 shadow-sm mt-4">
+                            <i className="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Lưu ý:</strong> Bằng cách nhấn "Tôi đồng ý", bạn xác nhận đã đọc và hiểu tất cả các điều khoản trên.
                         </Alert>
                     </div>
                 ) : (
                     <div className="text-center py-5">
                         <i className="bi bi-file-text text-muted" style={{ fontSize: '3rem' }}></i>
-                        <p className="text-muted mt-3">Không có chính sách mentor nào được tìm thấy.</p>
+                        <p className="text-muted mt-3">Không có chính sách nào được tìm thấy.</p>
                     </div>
                 )}
             </Modal.Body>
@@ -129,17 +129,17 @@ const MentorPolicyModal = ({ show, onHide, onAccept }) => {
                     Hủy
                 </Button>
                 <Button
-                    variant="success"
-                    onClick={handleAccept}
+                    variant="primary"
+                    onClick={handleAgree}
                     disabled={loading || error || policies.length === 0}
                     className="px-4"
                 >
                     <i className="bi bi-check-lg me-1"></i>
-                    Tôi đồng ý và tiếp tục
+                    Tôi đồng ý
                 </Button>
             </Modal.Footer>
         </Modal>
     );
 };
 
-export default MentorPolicyModal;
+export default CustomerPolicyModal;

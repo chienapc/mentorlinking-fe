@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts';
 import { clearAllStorage } from '../../utils/storageUtils';
+import CustomerPolicyModal from '../../components/common/CustomerPolicyModal';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../styles/components/Auth.css';
 
@@ -15,6 +16,7 @@ const RegisterPage = () => {
         confirmPassword: ''
     });
     const [agreedToTerms, setAgreedToTerms] = useState(false);
+    const [showPolicyModal, setShowPolicyModal] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -22,17 +24,43 @@ const RegisterPage = () => {
 
     // Clear localStorage khi component mount
     useEffect(() => {
-        // Clear tất cả localStorage data
-        clearAllStorage();
+        let isMounted = true;
 
-        // Logout để clear context state
-        logout();
-    }, [logout]); const handleInputChange = (e) => {
+        const initializeAuth = async () => {
+            try {
+                if (isMounted) {
+                    // Clear tất cả localStorage data
+                    clearAllStorage();
+
+                    // Logout để clear context state
+                    logout();
+                }
+            } catch (error) {
+                console.error('Error during auth initialization:', error);
+            }
+        };
+
+        initializeAuth();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [logout]);
+
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleTermsLabelClick = () => {
+        setShowPolicyModal(true);
+    };
+
+    const handlePolicyAgree = () => {
+        setAgreedToTerms(true);
     };
 
     const handleSubmit = async (e) => {
@@ -207,14 +235,22 @@ const RegisterPage = () => {
                                         <Form.Check
                                             type="checkbox"
                                             id="terms"
-                                            label="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
                                             className="text-secondary small"
                                             checked={agreedToTerms}
                                             onChange={(e) => setAgreedToTerms(e.target.checked)}
+                                            label={
+                                                <span>
+                                                    Tôi đồng ý với{' '}
+                                                    <span
+                                                        className="policy-link"
+                                                        onClick={handleTermsLabelClick}
+                                                    >
+                                                        điều khoản sử dụng và chính sách bảo mật
+                                                    </span>
+                                                </span>
+                                            }
                                         />
-                                    </Form.Group>
-
-                                    <Button
+                                    </Form.Group>                                    <Button
                                         variant="primary"
                                         type="submit"
                                         className="w-100 py-2 mb-3 fw-medium login-btn"
@@ -268,6 +304,13 @@ const RegisterPage = () => {
                     </Col>
                 </Row>
             </Container>
+
+            {/* Customer Policy Modal */}
+            <CustomerPolicyModal
+                show={showPolicyModal}
+                onHide={() => setShowPolicyModal(false)}
+                onAgree={handlePolicyAgree}
+            />
         </div>
     );
 };
