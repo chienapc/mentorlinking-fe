@@ -121,6 +121,29 @@
     box-shadow: none !important;
 }
 
+/* Checkbox styling for terms */
+.form-check-input:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(113, 201, 206, 0.25) !important;
+}
+
+/* Policy link styling */
+.policy-link {
+    color: var(--primary-color) !important;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.policy-link:hover {
+    color: var(--secondary-color) !important;
+}
+
 .divider {
     position: relative;
     text-align: center;

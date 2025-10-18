@@ -5,8 +5,6 @@ export const PUBLIC_ENDPOINTS = [
     '/api/auth/access-token',
     '/api/auth/refresh-token',
     '/api/auth/register',
-    '/api/mentors',
-    '/api/blogs'
 ];
 
 class AuthService {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import AuthService from '../services/auth/AuthService';
 
 export const AuthContext = createContext({
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         initializeAuth();
     }, []);
 
-    const login = async (email, password) => {
+    const login = useCallback(async (email, password) => {
         try {
             const result = await AuthService.login(email, password);
             if (result.success) {
@@ -77,18 +77,18 @@ export const AuthProvider = ({ children }) => {
                 error: 'Đăng nhập thất bại'
             };
         }
-    };
+    }, []);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         AuthService.logout();
         setAuthState({
             isLoggedIn: false,
             user: null,
             loading: false
         });
-    };
+    }, []);
 
-    const refreshToken = async () => {
+    const refreshToken = useCallback(async () => {
         try {
             const result = await AuthService.refreshToken();
             if (result.success) {
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
                 error: 'Refresh token thất bại'
             };
         }
-    };
+    }, [logout]);
 
     return (
         <AuthContext.Provider value={{
